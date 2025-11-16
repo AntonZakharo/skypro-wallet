@@ -4,8 +4,10 @@
       <img src="../assets/icons/Vector.svg" alt="" />
     </RouterLink>
     <nav class="header__nav">
-      <h3 class="header__nav-text" title="Мои расходы">Мои расходы</h3>
-      <h3 class="header__nav-text" title="Анализ расходов">Анализ расходов</h3>
+      <RouterLink to="/" class="header__nav-text" title="Мои расходы">Мои расходы</RouterLink>
+      <RouterLink to="/analytics" class="header__nav-text" title="Анализ расходов"
+        >Анализ расходов</RouterLink
+      >
     </nav>
     <p class="header__logout">Выйти</p>
   </header>
@@ -36,8 +38,19 @@
         overflow: hidden;
         visibility: hidden;
       }
-      &:hover {
+      &::after {
+        content: '';
+        display: block;
+        width: 100%;
         border-bottom: 1px solid #7334ea;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s;
+      }
+      &:hover::after {
+        transform: scaleX(1);
+      }
+      &:hover {
         color: #7334ea;
         font-weight: 600;
       }
