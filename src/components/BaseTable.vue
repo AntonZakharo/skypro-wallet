@@ -70,7 +70,7 @@ function formatDate(date) {
       content: '';
       border-bottom: 0.5px solid #999;
       left: -32px;
-      right: -32px; // ← растянет линию на всю ширину блока
+      right: -32px;
       bottom: 0;
       position: absolute;
     }
