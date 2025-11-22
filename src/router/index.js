@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
+import AuthView from '@/views/AuthView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,10 @@ const router = createRouter({
       path: '/analytics',
       component: AnalyticsView,
     },
+    {
+      path: '/auth',
+      component: AuthView,
+    }
   ],
 })
 

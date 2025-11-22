@@ -9,7 +9,7 @@
         >Анализ расходов</RouterLink
       >
     </nav>
-    <p class="header__logout">Выйти</p>
+    <RouterLink to="/auth" class="header__logout">Выйти</RouterLink>
   </header>
 </template>
 <style scoped lang="scss">
