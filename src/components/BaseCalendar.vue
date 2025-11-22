@@ -108,6 +108,7 @@ const calendarDates = computed(() => {
 </script>
 <style scoped lang="scss">
 .calendar {
+  padding-bottom: 15px;
   background-color: white;
   border-radius: 30px;
   width: 379px;
