@@ -1,9 +1,3 @@
-<script setup>
-import BaseHeader from '@/components/BaseHeader.vue'
-import BaseTable from '@/components/BaseTable.vue'
-import NewExpense from '@/components/NewExpense.vue'
-</script>
-
 <template>
   <BaseHeader />
   <h1 class="title center">Мои расходы</h1>
@@ -12,7 +6,14 @@ import NewExpense from '@/components/NewExpense.vue'
     <NewExpense />
   </div>
 </template>
-
+<script setup>
+import BaseHeader from '@/components/BaseHeader.vue'
+import BaseTable from '@/components/BaseTable.vue'
+import NewExpense from '@/components/NewExpense.vue'
+import { inject } from 'vue'
+const currentPage = inject('currentPage')
+currentPage.value = 'home'
+</script>
 <style scoped>
 .title {
   font-weight: 700;

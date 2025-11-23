@@ -4,14 +4,33 @@
       <img src="../assets/icons/Vector.svg" alt="" />
     </RouterLink>
     <nav class="header__nav">
-      <RouterLink to="/" class="header__nav-text" title="Мои расходы">Мои расходы</RouterLink>
-      <RouterLink to="/analytics" class="header__nav-text" title="Анализ расходов"
+      <RouterLink
+        to="/"
+        class="header__nav-text"
+        title="Мои расходы"
+        :class="{
+          _active: currentPage === 'home',
+        }"
+        >Мои расходы</RouterLink
+      >
+      <RouterLink
+        to="/analytics"
+        class="header__nav-text"
+        title="Анализ расходов"
+        :class="{
+          _active: currentPage === 'analytics',
+        }"
         >Анализ расходов</RouterLink
       >
     </nav>
     <RouterLink to="/auth" class="header__logout">Выйти</RouterLink>
   </header>
 </template>
+<script setup>
+import { inject } from 'vue'
+const currentPage = inject('currentPage')
+console.log(currentPage.value)
+</script>
 <style scoped lang="scss">
 .header {
   background-color: #ffffff;
@@ -30,6 +49,7 @@
       letter-spacing: 0px;
       text-align: center;
       transition: 0.3s;
+      position: relative;
       &::before {
         display: block;
         content: attr(title);
@@ -46,6 +66,7 @@
         transform: scaleX(0);
         transform-origin: center;
         transition: transform 0.3s;
+        position: absolute;
       }
       &:hover::after {
         transform: scaleX(1);
@@ -71,5 +92,10 @@
 .center {
   padding-left: calc(50% - 600px);
   padding-right: calc(50% - 600px);
+}
+._active {
+  border-bottom: 1px solid #7334ea;
+  color: #7334ea;
+  font-weight: 600;
 }
 </style>

@@ -1,7 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import BaseCalendar from '@/components/BaseCalendar.vue'
 import BaseExpensesTable from '@/components/BaseExpensesTable.vue'
 import BaseHeader from '@/components/BaseHeader.vue'
+import { inject } from 'vue'
+const currentPage = inject('currentPage')
+currentPage.value = 'analytics'
 </script>
 
 <template>
