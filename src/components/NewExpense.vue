@@ -16,7 +16,7 @@
           @click="chooseCategory('Еда')"
           class="form__category"
           :class="{
-            active: category == 'Еда',
+            active: category ===   'Еда',
           }"
         >
           <img src="../assets/icons/bag.svg" alt="img" />
@@ -26,7 +26,7 @@
           @click="chooseCategory('Транспорт')"
           class="form__category"
           :class="{
-            active: category == 'Транспорт',
+            active: category === 'Транспорт',
           }"
         >
           <img src="../assets/icons/car.svg" alt="img" />
@@ -36,7 +36,7 @@
           @click="chooseCategory('Жилье')"
           class="form__category"
           :class="{
-            active: category == 'Жилье',
+            active: category === 'Жилье',
           }"
         >
           <img src="../assets/icons/house.svg" alt="img" />
@@ -46,7 +46,7 @@
           @click="chooseCategory('Развлечение')"
           class="form__category"
           :class="{
-            active: category == 'Развлечение',
+            active: category === 'Развлечение',
           }"
         >
           <img src="../assets/icons/gameboy.svg" alt="img" />
@@ -56,7 +56,7 @@
           @click="chooseCategory('Образование')"
           class="form__category"
           :class="{
-            active: category == 'Образование',
+            active: category === 'Образование',
           }"
         >
           <img src="../assets/icons/teacher.svg" alt="img" />
@@ -66,7 +66,7 @@
           @click="chooseCategory('Другое')"
           class="form__category"
           :class="{
-            active: category == 'Другое',
+            active: category === 'Другое',
           }"
         >
           <img src="../assets/icons/message-text.svg" alt="img" />
@@ -146,6 +146,8 @@ function chooseCategory(cat) {
     padding: 8px 20px;
     display: flex;
     transition: 0.3s;
+    cursor: pointer;
+
     &-text {
       font-weight: 400;
       font-size: 12px;
