@@ -11,8 +11,26 @@ import BaseHeader from '@/components/BaseHeader.vue'
 import BaseTable from '@/components/BaseTable.vue'
 import NewExpense from '@/components/NewExpense.vue'
 import { inject } from 'vue'
+import { useRouter } from 'vue-router'
 const currentPage = inject('currentPage')
+const token = localStorage.getItem('token')
+const router = useRouter()
+
 currentPage.value = 'home'
+
+if (!token || token === null) {
+  router.push('/auth')
+}
+
+
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !token) {
+    next('/auth')
+  } else {
+    next()
+  }
+})
 </script>
 <style scoped>
 .title {

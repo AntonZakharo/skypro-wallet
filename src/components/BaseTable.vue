@@ -11,7 +11,7 @@
       <div class="expenses__block">
         <div v-for="e in expenses" :key="e._id" class="expense">
           <p class="expense__text">{{ e.description }}</p>
-          <p class="expense__text">{{ e.category }}</p>
+          <p class="expense__text">{{ categories[e.category] }}</p>
           <p class="expense__text">{{ formatDate(e.date) }}</p>
           <p class="expense__text">
             {{ e.sum }}₽
@@ -23,7 +23,19 @@
   </div>
 </template>
 <script setup>
-import { expenses } from '@/mocks/expenses'
+import { getExpenses } from '@/serivces/api'
+import { inject } from 'vue'
+const categories = {
+  food: 'Еда',
+  transport: 'Транспорт',
+  housing: 'Жилье',
+  joy: 'Развлечения',
+  education: 'Образование',
+  others: 'Другое',
+}
+const expenses = inject('expenses')
+getExpenses(expenses)
+
 function formatDate(date) {
   date = new Date(date)
   let day = date.getDate()

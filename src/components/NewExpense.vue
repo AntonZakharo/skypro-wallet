@@ -13,60 +13,60 @@
       <p class="form__text">Категория</p>
       <div class="form__categories">
         <div
-          @click="chooseCategory('Еда')"
+          @click="chooseCategory('food')"
           class="form__category"
           :class="{
-            active: category ===   'Еда',
+            active: category === 'food',
           }"
         >
           <img src="../assets/icons/bag.svg" alt="img" />
           <p class="form__category-text">Еда</p>
         </div>
         <div
-          @click="chooseCategory('Транспорт')"
+          @click="chooseCategory('transport')"
           class="form__category"
           :class="{
-            active: category === 'Транспорт',
+            active: category === 'transport',
           }"
         >
           <img src="../assets/icons/car.svg" alt="img" />
           <p class="form__category-text">Транспорт</p>
         </div>
         <div
-          @click="chooseCategory('Жилье')"
+          @click="chooseCategory('housing')"
           class="form__category"
           :class="{
-            active: category === 'Жилье',
+            active: category === 'housing',
           }"
         >
           <img src="../assets/icons/house.svg" alt="img" />
           <p class="form__category-text">Жилье</p>
         </div>
         <div
-          @click="chooseCategory('Развлечение')"
+          @click="chooseCategory('joy')"
           class="form__category"
           :class="{
-            active: category === 'Развлечение',
+            active: category === 'joy',
           }"
         >
           <img src="../assets/icons/gameboy.svg" alt="img" />
           <p class="form__category-text">Развлечение</p>
         </div>
         <div
-          @click="chooseCategory('Образование')"
+          @click="chooseCategory('education')"
           class="form__category"
           :class="{
-            active: category === 'Образование',
+            active: category === 'education',
           }"
         >
           <img src="../assets/icons/teacher.svg" alt="img" />
           <p class="form__category-text">Образование</p>
         </div>
         <div
-          @click="chooseCategory('Другое')"
+          @click="chooseCategory('others')"
           class="form__category"
           :class="{
-            active: category === 'Другое',
+            active: category === 'others',
           }"
         >
           <img src="../assets/icons/message-text.svg" alt="img" />
@@ -74,20 +74,34 @@
         </div>
       </div>
       <p class="form__text">Дата</p>
-      <input class="form__input" type="text" v-model="date" placeholder="Введите дату" />
+      <input class="form__input" type="date" v-model="date" placeholder="Введите дату" />
       <p class="form__text">Сумма</p>
-      <input class="form__input" type="text" v-model="sum" placeholder="Введите сумму" />
-      <button class="form__button">Добавить новый расход</button>
+      <input class="form__input" type="number" v-model="sum" placeholder="Введите сумму" />
+      <button @click="createExpense" class="form__button">Добавить новый расход</button>
     </div>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { postExpense } from '@/serivces/api'
+import { inject, ref } from 'vue'
 
-const description = ref()
-const category = ref()
+const description = ref('')
+const category = ref('')
 const date = ref()
 const sum = ref()
+const expenses = inject('expenses')
+function createExpense() {
+  if (description.value && category.value && date.value && sum.value && expenses.value) {
+    postExpense({
+      description: description.value,
+      sum: sum.value,
+      category: category.value,
+      date: date.value,
+    }).then((exp) => {
+      expenses.value = exp
+    })
+  }
+}
 
 function chooseCategory(cat) {
   category.value = cat
@@ -121,9 +135,6 @@ function chooseCategory(cat) {
     width: 100%;
     box-sizing: border-box;
     transition: transform 0.3s;
-    &:hover {
-      transform: scale(1.02);
-    }
     &::placeholder {
       font-weight: 400;
       font-size: 12px;
@@ -170,6 +181,7 @@ function chooseCategory(cat) {
     width: 100%;
     padding: 12px 0;
     border: none;
+    cursor: pointer;
   }
 }
 .active {

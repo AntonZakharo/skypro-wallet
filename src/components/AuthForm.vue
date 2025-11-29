@@ -3,12 +3,12 @@
     <div v-if="!isReg" class="form__title">Вход</div>
     <div v-if="isReg" class="form__title">Регистрация</div>
     <div class="form__inputs">
-      <input type="text" class="form__input" placeholder="Логин" />
-      <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" />
-      <input type="password" class="form__input" placeholder="Пароль" />
+      <input type="text" class="form__input" placeholder="Логин" v-model="login" />
+      <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" v-model="email" />
+      <input type="password" class="form__input" placeholder="Пароль" v-model="password" />
     </div>
-    <button v-if="!isReg" class="form__button" @click="goToMain">Войти</button>
-    <button v-if="isReg" class="form__button" @click="goToMain">Регистрация</button>
+    <button v-if="!isReg" class="form__button" @click="log">Войти</button>
+    <button v-if="isReg" class="form__button" @click="reg">Регистрация</button>
     <p v-if="!isReg" class="form__text">
       Нужно зарегистрироваться?<br /><span class="form__link" @click="changeMode"
         >Регистрируйтесь здесь</span
@@ -22,15 +22,49 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { signIn, signUp } from '@/serivces/auth'
 
 const isReg = ref(false)
 const router = useRouter()
 
+const login = ref()
+const password = ref()
+const email = ref()
+
 function changeMode() {
   isReg.value = !isReg.value
 }
-function goToMain() {
-  router.push('/')
+function log() {
+  try {
+    if (login.value && password.value) {
+      signIn({
+        login: login.value,
+        password: password.value,
+      }).then((user) => {
+        localStorage.setItem('token', user.token)
+        router.push('/')
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+function reg() {
+  if (login.value && password.value && email.value) {
+    try {
+      signUp({
+        login: login.value,
+        password: password.value,
+        name: email.value,
+      }).then((user) => {
+        localStorage.setItem('token', user.token)
+        router.push('/')
+      })
+      router.push('/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -60,6 +94,9 @@ function goToMain() {
       font-weight: 400;
       font-size: 12px;
       line-height: 100%;
+    }
+    &:focus {
+      outline: 0;
     }
   }
   &__inputs {
