@@ -18,8 +18,14 @@
             v-for="(date, ind) in dateObj.days"
             :key="ind"
             class="calendar__date"
+            @click="chooseDate(dateObj.year, dateObj.month, date.day)"
             :class="{
               '_other-month': date.otherMonth,
+              _chosen:
+                currentDates &&
+                currentDates.some(
+                  (d) => d.day === date.day && d.month === dateObj.month && d.year === dateObj.year,
+                ),
             }"
           >
             {{ date.day }}
@@ -30,11 +36,15 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 const today = new Date()
 const currentMonth = ref(today.getMonth())
 const currentYear = ref(today.getFullYear())
+
+const selectedDate = ref()
+
+const currentDates = inject('date')
 
 const monthNames = [
   'Январь',
@@ -105,6 +115,48 @@ const calendarDates = computed(() => {
   }
   return dates
 })
+
+function chooseDate(year, month, day) {
+  if (selectedDate.value !== undefined && currentDates.value.length == 1) {
+    const endDate = {
+      month: month,
+      year: year,
+      day: day,
+    }
+    currentDates.value = []
+
+    let current = new Date(
+      selectedDate.value.year,
+      selectedDate.value.month,
+      selectedDate.value.day,
+    )
+
+    while (current <= new Date(endDate.year, endDate.month, endDate.day)) {
+      const cur = new Date(current)
+      currentDates.value.push({
+        month: cur.getMonth(),
+        year: cur.getFullYear(),
+        day: cur.getDate(),
+      })
+      current.setDate(current.getDate() + 1)
+    }
+  } else if (selectedDate.value !== undefined && currentDates.value.length > 1) {
+    currentDates.value = []
+  } else {
+    selectedDate.value = {
+      month: month,
+      year: year,
+      day: day,
+    }
+    currentDates.value = []
+    currentDates.value.push(selectedDate.value)
+  }
+}
+
+onMounted(() => {
+  const list = document.querySelector('.calendar__list')
+  list.scrollTop = list.scrollHeight
+})
 </script>
 <style scoped lang="scss">
 .calendar {
@@ -171,6 +223,7 @@ const calendarDates = computed(() => {
     line-height: 40px;
     font-weight: 400;
     font-size: 12px;
+    cursor: pointer;
   }
   &__list {
     overflow-y: auto;

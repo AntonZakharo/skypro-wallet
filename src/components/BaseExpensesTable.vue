@@ -2,7 +2,13 @@
   <div class="expenses-table">
     <h2 class="expenses-table__title">9 581 ₽</h2>
     <p class="expenses-table__text">
-      Расходы за <span class="expenses-table__text_bold"> 10 июля 2024</span>
+      Расходы за
+      <span v-if="isDate" class="expenses-table__text_bold"
+        >{{ startDate.day }} {{ monthNames[startDate.month] }} {{ startDate.year }}</span
+      >
+      <span v-if="endDate" class="expenses-table__text_bold">
+        — {{ endDate.day }} {{ monthNames[endDate.month] }} {{ endDate.year }}</span
+      >
     </p>
     <div class="table">
       <div v-for="(column, index) in columns" :key="index" class="table__column">
@@ -14,6 +20,8 @@
   </div>
 </template>
 <script setup>
+import { computed, inject } from 'vue'
+
 const columns = [
   {
     name: 'Еда',
@@ -46,6 +54,28 @@ const columns = [
     color: 'pink',
   },
 ]
+
+const monthNames = [
+  'января',
+  'февраля',
+  'марта',
+  'апреля',
+  'мая',
+  'июня',
+  'июля',
+  'августа',
+  'сентября',
+  'октября',
+  'ноября',
+  'декабря',
+]
+
+const currentDate = inject('date')
+const startDate = computed(() => currentDate.value[0])
+const endDate = computed(() => {
+  return currentDate.value.length > 1 ? currentDate.value[currentDate.value.length - 1] : false
+})
+const isDate = computed(() => startDate.value !== undefined)
 </script>
 <style scoped lang="scss">
 .expenses-table {

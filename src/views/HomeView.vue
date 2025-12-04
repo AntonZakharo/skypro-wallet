@@ -22,8 +22,6 @@ if (!token || token === null) {
   router.push('/auth')
 }
 
-
-
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !token) {
     next('/auth')

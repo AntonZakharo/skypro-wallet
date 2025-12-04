@@ -91,7 +91,7 @@ const date = ref()
 const sum = ref()
 const expenses = inject('expenses')
 function createExpense() {
-  if (description.value && category.value && date.value && sum.value && expenses.value) {
+  if (description.value && category.value && date.value && sum.value) {
     postExpense({
       description: description.value,
       sum: sum.value,

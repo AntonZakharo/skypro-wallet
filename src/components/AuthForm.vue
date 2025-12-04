@@ -7,6 +7,7 @@
       <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" v-model="email" />
       <input type="password" class="form__input" placeholder="Пароль" v-model="password" />
     </div>
+    <div v-if="isError" class="error">{{ error }}</div>
     <button v-if="!isReg" class="form__button" @click="log">Войти</button>
     <button v-if="isReg" class="form__button" @click="reg">Регистрация</button>
     <p v-if="!isReg" class="form__text">
@@ -30,29 +31,38 @@ const router = useRouter()
 const login = ref()
 const password = ref()
 const email = ref()
+const error = ref()
+const isError = ref(false)
 
 function changeMode() {
   isReg.value = !isReg.value
+  login.value = ''
+  password.value = ''
+  email.value = ''
 }
-function log() {
+async function log() {
   try {
     if (login.value && password.value) {
-      signIn({
+      await signIn({
         login: login.value,
         password: password.value,
       }).then((user) => {
         localStorage.setItem('token', user.token)
         router.push('/')
       })
+    } else {
+      error.value = 'Не все поля заполнены'
+      isError.value = true
     }
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    error.value = String(err).slice(6)
+    isError.value = true
   }
 }
-function reg() {
-  if (login.value && password.value && email.value) {
-    try {
-      signUp({
+async function reg() {
+  try {
+    if (login.value && password.value && email.value) {
+      await signUp({
         login: login.value,
         password: password.value,
         name: email.value,
@@ -61,9 +71,13 @@ function reg() {
         router.push('/')
       })
       router.push('/')
-    } catch (error) {
-      console.log(error)
+    } else {
+      error.value = 'Не все поля заполнены'
+      isError.value = true
     }
+  } catch (err) {
+    error.value = String(err).slice(6)
+    isError.value = true
   }
 }
 </script>
@@ -130,5 +144,10 @@ function reg() {
     border-bottom: 1px solid #999999;
     cursor: pointer;
   }
+}
+.error {
+  font-size: 14px;
+  color: #cc0000;
+  text-align: center;
 }
 </style>

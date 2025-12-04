@@ -8,7 +8,8 @@
         <p class="expenses__title">Дата</p>
         <p class="expenses__title">Сумма</p>
       </div>
-      <div class="expenses__block">
+      <BaseLoader v-if="loading"></BaseLoader>
+      <div v-else class="expenses__block">
         <div v-for="e in expenses" :key="e._id" class="expense">
           <p class="expense__text">{{ e.description }}</p>
           <p class="expense__text">{{ categories[e.category] }}</p>
@@ -24,7 +25,8 @@
 </template>
 <script setup>
 import { getExpenses } from '@/serivces/api'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
+import BaseLoader from './BaseLoader.vue'
 const categories = {
   food: 'Еда',
   transport: 'Транспорт',
@@ -33,8 +35,11 @@ const categories = {
   education: 'Образование',
   others: 'Другое',
 }
+const loading = ref(true)
 const expenses = inject('expenses')
-getExpenses(expenses)
+getExpenses(expenses).then(() => {
+  loading.value = false
+})
 
 function formatDate(date) {
   date = new Date(date)

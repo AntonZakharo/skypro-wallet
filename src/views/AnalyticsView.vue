@@ -2,12 +2,18 @@
 import BaseCalendar from '@/components/BaseCalendar.vue'
 import BaseExpensesTable from '@/components/BaseExpensesTable.vue'
 import BaseHeader from '@/components/BaseHeader.vue'
-import { inject } from 'vue'
+import { inject, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
-const currentPage = inject('currentPage')
+
 const token = localStorage.getItem('token')
 const router = useRouter()
+
+const date = ref([])
+provide('date', date)
+
+const currentPage = inject('currentPage')
 currentPage.value = 'analytics'
+
 if (!token || token === null) {
   router.push('/auth')
 }
