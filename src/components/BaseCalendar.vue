@@ -24,7 +24,8 @@
               _chosen:
                 currentDates &&
                 currentDates.some(
-                  (d) => d.day === date.day && d.month === dateObj.month && d.year === dateObj.year,
+                  (d) =>
+                    d.day === date.day && d.month - 1 === dateObj.month && d.year === dateObj.year,
                 ),
             }"
           >
@@ -118,33 +119,32 @@ const calendarDates = computed(() => {
 
 function chooseDate(year, month, day) {
   if (selectedDate.value !== undefined && currentDates.value.length == 1) {
-    const endDate = {
-      month: month,
-      year: year,
-      day: day,
-    }
+    const endDate = new Date(year, month, day)
+
     currentDates.value = []
 
     let current = new Date(
       selectedDate.value.year,
-      selectedDate.value.month,
+      selectedDate.value.month - 1,
       selectedDate.value.day,
     )
+    const maxDate = current > endDate ? current : endDate
+    const minDate = current > endDate ? endDate : current
 
-    while (current <= new Date(endDate.year, endDate.month, endDate.day)) {
-      const cur = new Date(current)
+    while (minDate <= maxDate) {
+      const cur = new Date(minDate)
       currentDates.value.push({
-        month: cur.getMonth(),
+        month: cur.getMonth() + 1,
         year: cur.getFullYear(),
         day: cur.getDate(),
       })
-      current.setDate(current.getDate() + 1)
+      minDate.setDate(minDate.getDate() + 1)
     }
   } else if (selectedDate.value !== undefined && currentDates.value.length > 1) {
     currentDates.value = []
   } else {
     selectedDate.value = {
-      month: month,
+      month: month + 1,
       year: year,
       day: day,
     }
@@ -236,5 +236,6 @@ onMounted(() => {
 }
 ._other-month {
   opacity: 0;
+  pointer-events: none;
 }
 </style>

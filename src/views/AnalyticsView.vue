@@ -1,3 +1,11 @@
+<template>
+  <BaseHeader />
+  <h1 class="title center">Анализ расходов</h1>
+  <div class="main center">
+    <BaseCalendar />
+    <BaseExpensesTable />
+  </div>
+</template>
 <script setup>
 import BaseCalendar from '@/components/BaseCalendar.vue'
 import BaseExpensesTable from '@/components/BaseExpensesTable.vue'
@@ -18,15 +26,6 @@ if (!token || token === null) {
   router.push('/auth')
 }
 </script>
-
-<template>
-  <BaseHeader />
-  <h1 class="title center">Анализ расходов</h1>
-  <div class="main center">
-    <BaseCalendar />
-    <BaseExpensesTable />
-  </div>
-</template>
 <style scoped>
 .title {
   font-weight: 700;

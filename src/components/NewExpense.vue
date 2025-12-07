@@ -76,7 +76,17 @@
       <p class="form__text">Дата</p>
       <input class="form__input" type="date" v-model="date" placeholder="Введите дату" />
       <p class="form__text">Сумма</p>
-      <input class="form__input" type="number" v-model="sum" placeholder="Введите сумму" />
+      <input
+        class="form__input"
+        type="number"
+        v-model="sum"
+        placeholder="Введите сумму"
+        @input="onlyDigits"
+        :style="{
+          marginBottom: isError ? '12px' : '24px',
+        }"
+      />
+      <p class="form__error" v-if="isError">{{ error }}</p>
       <button @click="createExpense" class="form__button">Добавить новый расход</button>
     </div>
   </div>
@@ -85,6 +95,8 @@
 import { postExpense } from '@/serivces/api'
 import { inject, ref } from 'vue'
 
+const isError = ref(false)
+const error = ref('')
 const description = ref('')
 const category = ref('')
 const date = ref()
@@ -92,19 +104,34 @@ const sum = ref()
 const expenses = inject('expenses')
 function createExpense() {
   if (description.value && category.value && date.value && sum.value) {
+    if (description.value.length < 4) {
+      isError.value = true
+      error.value = 'Длина описания должна быть минимум 4 символа'
+      return
+    }
     postExpense({
       description: description.value,
-      sum: sum.value,
+      sum: Number(sum.value),
       category: category.value,
       date: date.value,
     }).then((exp) => {
       expenses.value = exp
     })
+    description.value = ''
+    category.value = ''
+    date.value = ''
+    sum.value = ''
+  } else {
+    isError.value = true
+    error.value = 'Не все поля заполнены'
   }
 }
 
 function chooseCategory(cat) {
   category.value = cat
+}
+function onlyDigits(e) {
+  e.target.value = e.target.value.replace(/\D/g, '')
 }
 </script>
 <style scoped lang="scss">
@@ -183,8 +210,23 @@ function chooseCategory(cat) {
     border: none;
     cursor: pointer;
   }
+  &__error {
+    font-size: 14px;
+    color: #cc0000;
+    text-align: center;
+    margin-bottom: 12px;
+  }
 }
 .active {
   background-color: #dfdfdf;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 </style>
