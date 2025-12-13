@@ -23,13 +23,18 @@
         >Анализ расходов</RouterLink
       >
     </nav>
-    <RouterLink to="/auth" class="header__logout">Выйти</RouterLink>
+    <RouterLink to="/auth" @click="logout" class="header__logout">Выйти</RouterLink>
   </header>
 </template>
 <script setup>
 import { inject } from 'vue'
+import { useRouter } from 'vue-router'
 const currentPage = inject('currentPage')
-console.log(currentPage.value)
+const router = useRouter()
+function logout() {
+  localStorage.removeItem('token')
+  router.push('/auth')
+}
 </script>
 <style scoped lang="scss">
 .header {

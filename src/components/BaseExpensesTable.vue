@@ -1,51 +1,70 @@
 <template>
   <div class="expenses-table">
-    <h2 class="expenses-table__title">9 581 ₽</h2>
+    <h2 class="expenses-table__title">{{ total - 1 }}₽</h2>
     <p class="expenses-table__text">
-      Расходы за <span class="expenses-table__text_bold"> 10 июля 2024</span>
+      Расходы за
+      <span v-if="isDate" class="expenses-table__text_bold"
+        >{{ startDate.day }} {{ monthNames[startDate.month - 1] }} {{ startDate.year }}</span
+      >
+      <span v-if="endDate" class="expenses-table__text_bold">
+        — {{ endDate.day }} {{ monthNames[endDate.month - 1] }} {{ endDate.year }}</span
+      >
     </p>
-    <div class="table">
-      <div v-for="(column, index) in columns" :key="index" class="table__column">
-        <div class="table__column-price">{{ column['price'] }} ₽</div>
-        <div class="table__column-progress" :class="`_${column['color']}`"></div>
-        <div class="table__column-name">{{ column['name'] }}</div>
-      </div>
-    </div>
+    <BaseDiagram :expenses="filteredExps"></BaseDiagram>
   </div>
 </template>
 <script setup>
-const columns = [
-  {
-    name: 'Еда',
-    price: 3590,
-    color: 'purple',
-  },
-  {
-    name: 'Транспорт',
-    price: 1835,
-    color: 'orange',
-  },
-  {
-    name: 'Жилье',
-    price: 0,
-    color: 'blue',
-  },
-  {
-    name: 'Развлечения',
-    price: 1250,
-    color: 'violet',
-  },
-  {
-    name: 'Образование',
-    price: 600,
-    color: 'green',
-  },
-  {
-    name: 'Другое',
-    price: 2306,
-    color: 'pink',
-  },
+import { computed, inject, provide, ref, watch } from 'vue'
+import BaseDiagram from './BaseDiagram.vue'
+import { getExpenses } from '@/serivces/api'
+
+const monthNames = [
+  'января',
+  'февраля',
+  'марта',
+  'апреля',
+  'мая',
+  'июня',
+  'июля',
+  'августа',
+  'сентября',
+  'октября',
+  'ноября',
+  'декабря',
 ]
+
+const total = ref(0)
+provide('total', total)
+
+const currentDates = inject('date')
+const startDate = computed(() => currentDates.value[0])
+const endDate = computed(() => {
+  return currentDates.value.length > 1 ? currentDates.value[currentDates.value.length - 1] : false
+})
+const isDate = computed(() => startDate.value !== undefined)
+
+const expenses = ref([])
+const filteredExps = ref([])
+watch(
+  () => currentDates.value,
+  async () => {
+    filteredExps.value = []
+    await getExpenses(expenses)
+    currentDates.value.forEach((selectedDate) => {
+      expenses.value.forEach((exp) => {
+        const d = new Date(exp.date)
+        if (
+          d.getFullYear() === selectedDate.year &&
+          d.getMonth() + 1 === selectedDate.month &&
+          d.getDate() === selectedDate.day
+        ) {
+          filteredExps.value.push(exp)
+        }
+      })
+    })
+  },
+  { immediate: true }, // запустит фильтрацию при загрузке компонента
+)
 </script>
 <style scoped lang="scss">
 .expenses-table {

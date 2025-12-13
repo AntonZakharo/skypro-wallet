@@ -3,12 +3,13 @@
     <div v-if="!isReg" class="form__title">Вход</div>
     <div v-if="isReg" class="form__title">Регистрация</div>
     <div class="form__inputs">
-      <input type="text" class="form__input" placeholder="Логин" />
-      <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" />
-      <input type="password" class="form__input" placeholder="Пароль" />
+      <input type="text" class="form__input" placeholder="Логин" v-model="login" />
+      <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" v-model="email" />
+      <input type="password" class="form__input" placeholder="Пароль" v-model="password" />
     </div>
-    <button v-if="!isReg" class="form__button" @click="goToMain">Войти</button>
-    <button v-if="isReg" class="form__button" @click="goToMain">Регистрация</button>
+    <div v-if="isError" class="error">{{ error }}</div>
+    <button v-if="!isReg" class="form__button" @click="log">Войти</button>
+    <button v-if="isReg" class="form__button" @click="reg">Регистрация</button>
     <p v-if="!isReg" class="form__text">
       Нужно зарегистрироваться?<br /><span class="form__link" @click="changeMode"
         >Регистрируйтесь здесь</span
@@ -22,15 +23,62 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { signIn, signUp } from '@/serivces/auth'
 
 const isReg = ref(false)
 const router = useRouter()
 
+const login = ref()
+const password = ref()
+const email = ref()
+const error = ref()
+const isError = ref(false)
+
 function changeMode() {
   isReg.value = !isReg.value
+  login.value = ''
+  password.value = ''
+  email.value = ''
 }
-function goToMain() {
-  router.push('/')
+async function log() {
+  try {
+    if (login.value && password.value) {
+      await signIn({
+        login: login.value,
+        password: password.value,
+      }).then((user) => {
+        localStorage.setItem('token', user.token)
+        router.push('/')
+      })
+    } else {
+      error.value = 'Не все поля заполнены'
+      isError.value = true
+    }
+  } catch (err) {
+    error.value = String(err).slice(6)
+    isError.value = true
+  }
+}
+async function reg() {
+  try {
+    if (login.value && password.value && email.value) {
+      await signUp({
+        login: login.value,
+        password: password.value,
+        name: email.value,
+      }).then((user) => {
+        localStorage.setItem('token', user.token)
+        router.push('/')
+      })
+      router.push('/')
+    } else {
+      error.value = 'Не все поля заполнены'
+      isError.value = true
+    }
+  } catch (err) {
+    error.value = String(err).slice(6)
+    isError.value = true
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -60,6 +108,9 @@ function goToMain() {
       font-weight: 400;
       font-size: 12px;
       line-height: 100%;
+    }
+    &:focus {
+      outline: 0;
     }
   }
   &__inputs {
@@ -93,5 +144,10 @@ function goToMain() {
     border-bottom: 1px solid #999999;
     cursor: pointer;
   }
+}
+.error {
+  font-size: 14px;
+  color: #cc0000;
+  text-align: center;
 }
 </style>
