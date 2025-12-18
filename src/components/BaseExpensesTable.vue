@@ -16,7 +16,7 @@
 <script setup>
 import { computed, inject, provide, ref, watch } from 'vue'
 import BaseDiagram from './BaseDiagram.vue'
-import { getExpenses } from '@/serivces/api'
+import { getExpenses } from '@/services/api'
 
 const monthNames = [
   'января',
@@ -45,11 +45,11 @@ const isDate = computed(() => startDate.value !== undefined)
 
 const expenses = ref([])
 const filteredExps = ref([])
+getExpenses(expenses)
 watch(
   () => currentDates.value,
   async () => {
     filteredExps.value = []
-    await getExpenses(expenses)
     currentDates.value.forEach((selectedDate) => {
       expenses.value.forEach((exp) => {
         const d = new Date(exp.date)

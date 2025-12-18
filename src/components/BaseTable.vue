@@ -16,7 +16,18 @@
           <p class="expense__text">{{ formatDate(e.date) }}</p>
           <p class="expense__text">
             {{ e.sum }}₽
-            <img src="../assets/icons/delete.svg" alt="" class="expense__img" />
+            <img
+              src="../assets/icons/delete.svg"
+              alt=""
+              @click="remove(e)"
+              class="expense__img expense__img_delete"
+            />
+            <img
+              src="../assets/icons/edit.png"
+              alt=""
+              @click="turnEditMode(e)"
+              class="expense__img expense__img_edit"
+            />
           </p>
         </div>
       </div>
@@ -24,7 +35,7 @@
   </div>
 </template>
 <script setup>
-import { getExpenses } from '@/serivces/api'
+import { getExpenses, deleteExpense } from '@/services/api'
 import { inject, ref } from 'vue'
 import BaseLoader from './BaseLoader.vue'
 const categories = {
@@ -37,6 +48,7 @@ const categories = {
 }
 const loading = ref(true)
 const expenses = inject('expenses')
+const editObj = inject('editObj')
 getExpenses(expenses).then(() => {
   loading.value = false
 })
@@ -57,7 +69,22 @@ function formatDate(date) {
 
   return `${day}.${month}.${year}`
 }
+function remove(expense) {
+  try {
+    deleteExpense(expense, expense._id).then((exps) => {
+      expenses.value = exps
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function turnEditMode(expense) {
+  editObj.value.isEditing = true
+  editObj.value.currentExpense = expense
+}
 </script>
+
 <style scoped lang="scss">
 .main {
   background-color: white;
@@ -122,8 +149,16 @@ function formatDate(date) {
     position: relative;
   }
   &__img {
-    margin-left: 145px;
     position: absolute;
+    cursor: pointer;
+    &_delete {
+      margin-left: 145px;
+    }
+    &_edit {
+      margin-left: 162px;
+      width: 12px;
+      height: 12px;
+    }
   }
 }
 </style>

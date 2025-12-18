@@ -3,7 +3,7 @@
     <RouterLink to="/">
       <img src="../assets/icons/Vector.svg" alt="" />
     </RouterLink>
-    <nav class="header__nav">
+    <nav v-if="!isAuth" class="header__nav">
       <RouterLink
         to="/"
         class="header__nav-text"
@@ -23,12 +23,16 @@
         >Анализ расходов</RouterLink
       >
     </nav>
-    <RouterLink to="/auth" @click="logout" class="header__logout">Выйти</RouterLink>
+    <RouterLink v-if="!isAuth" to="/auth" @click="logout" class="header__logout">Выйти</RouterLink>
   </header>
 </template>
 <script setup>
 import { inject } from 'vue'
 import { useRouter } from 'vue-router'
+
+defineProps({
+  isAuth: Boolean,
+})
 const currentPage = inject('currentPage')
 const router = useRouter()
 function logout() {

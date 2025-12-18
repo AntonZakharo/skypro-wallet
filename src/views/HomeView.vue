@@ -10,7 +10,7 @@
 import BaseHeader from '@/components/BaseHeader.vue'
 import BaseTable from '@/components/BaseTable.vue'
 import NewExpense from '@/components/NewExpense.vue'
-import { inject } from 'vue'
+import { inject, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
 const currentPage = inject('currentPage')
 const token = localStorage.getItem('token')
@@ -29,6 +29,11 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+const editObj = ref({
+  isEditing: false,
+  currentExpense: {},
+})
+provide('editObj', editObj)
 </script>
 <style scoped>
 .title {

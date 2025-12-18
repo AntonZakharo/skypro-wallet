@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API_URL = 'https://wedev-api.sky.pro/api/transactions'
+const API_URL = 'https://wedev-api.sky.pro/api/transactions/'
 // Эта переменная содержит базовый URL для запросов к нашему серверу
 async function fetchExpenses({ token }) {
   try {
@@ -40,7 +40,7 @@ export async function postExpense(expense) {
   }
 }
 
-export async function editExpense(id, expense) {
+export async function editExpense(expense, id) {
   try {
     const data = await axios.patch(API_URL + id, expense, {
       headers: {
@@ -48,13 +48,13 @@ export async function editExpense(id, expense) {
         'Content-Type': '',
       },
     })
-    return data.data.words
+    return data.data.transactions
   } catch (error) {
     throw new Error(error)
   }
 }
 
-export async function deleteTask(id) {
+export async function deleteExpense(id) {
   try {
     const data = await axios.delete(API_URL + id, {
       headers: {
@@ -63,7 +63,7 @@ export async function deleteTask(id) {
       },
     })
 
-    return data.data.words
+    return data.data.transactions
   } catch (error) {
     throw new Error(error)
   }

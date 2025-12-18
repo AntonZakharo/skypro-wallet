@@ -1,6 +1,16 @@
 <template>
   <div class="main">
-    <h2 class="title">Новый расход</h2>
+    <div class="block">
+      <h2 class="title">Новый расход</h2>
+      <img
+        v-if="editObj.isEditing"
+        @click="turnEditModeOff"
+        src="../assets/icons/reject.png"
+        alt="img"
+        class="exit-btn"
+      />
+    </div>
+
     <div class="form">
       <label class="form__text" for="description">Описание</label>
       <input
@@ -92,16 +102,19 @@
   </div>
 </template>
 <script setup>
-import { postExpense } from '@/serivces/api'
-import { inject, ref } from 'vue'
+import { editExpense, postExpense } from '@/services/api'
+import { computed, inject, ref } from 'vue'
+
+const expenses = inject('expenses')
+const editObj = inject('editObj')
 
 const isError = ref(false)
 const error = ref('')
-const description = ref('')
-const category = ref('')
-const date = ref()
-const sum = ref()
-const expenses = inject('expenses')
+const description = computed(() => editObj.value.currentExpense.description)
+const category = computed(() => editObj.value.currentExpense.category)
+const date = computed(() => editObj.value.currentExpense.date)
+const sum = computed(() => editObj.value.currentExpense.sum)
+
 function createExpense() {
   if (description.value && category.value && date.value && sum.value) {
     if (description.value.length < 4) {
@@ -133,12 +146,38 @@ function chooseCategory(cat) {
 function onlyDigits(e) {
   e.target.value = e.target.value.replace(/\D/g, '')
 }
+function edit(expense) {
+  try {
+    editExpense(expense, expense._id).then((exps) => {
+      expenses.value = exps
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+function turnEditModeOff() {
+  description.value = ''
+  date.value = ''
+  sum.value = ''
+  category.value = ''
+}
 </script>
 <style scoped lang="scss">
 .main {
   background-color: white;
   border-radius: 30px;
   padding: 32px;
+}
+.block {
+  display: flex;
+  position: relative;
+}
+.exit-btn {
+  position: absolute;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
 }
 .title {
   font-weight: 700;
