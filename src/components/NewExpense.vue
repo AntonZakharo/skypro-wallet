@@ -1,5 +1,7 @@
 <template>
-  <div class="main">
+  <div class="main" :style="{
+    outline: editObj.isEditing ? '1px solid black': 'none'
+  }">
     <div class="block">
       <h2 class="title">Новый расход</h2>
       <img
@@ -97,23 +99,24 @@
         }"
       />
       <p class="form__error" v-if="isError">{{ error }}</p>
-      <button @click="createExpense" class="form__button">Добавить новый расход</button>
+      <button @click="edit({description, category, date, sum}, editObj.currentExpense._id)" v-if="editObj.isEditing" class="form__button">Изменить расход</button>
+      <button @click="createExpense" v-else class="form__button">Добавить новый расход</button>
     </div>
   </div>
 </template>
 <script setup>
 import { editExpense, postExpense } from '@/services/api'
-import { computed, inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 
 const expenses = inject('expenses')
 const editObj = inject('editObj')
 
 const isError = ref(false)
 const error = ref('')
-const description = computed(() => editObj.value.currentExpense.description)
-const category = computed(() => editObj.value.currentExpense.category)
-const date = computed(() => editObj.value.currentExpense.date)
-const sum = computed(() => editObj.value.currentExpense.sum)
+const description = ref()
+const category = ref()
+const date = ref()
+const sum = ref()
 
 function createExpense() {
   if (description.value && category.value && date.value && sum.value) {
@@ -146,11 +149,13 @@ function chooseCategory(cat) {
 function onlyDigits(e) {
   e.target.value = e.target.value.replace(/\D/g, '')
 }
-function edit(expense) {
+function edit(expense, id) {
   try {
-    editExpense(expense, expense._id).then((exps) => {
+    editExpense(expense, id).then((exps) => {
       expenses.value = exps
+      turnEditModeOff()
     })
+
   } catch (err) {
     console.log(err)
   }
@@ -160,7 +165,17 @@ function turnEditModeOff() {
   date.value = ''
   sum.value = ''
   category.value = ''
+  editObj.value.isEditing = false
+  editObj.value.currentExpense = {}
 }
+
+watch(editObj.value, (newEditObj) => {
+  if (Object.keys(newEditObj.currentExpense).length == 0) return
+  description.value = newEditObj.currentExpense.description
+  category.value = newEditObj.currentExpense.category
+  date.value = new Date(newEditObj.currentExpense.date).toISOString().slice(0, 10)
+  sum.value = newEditObj.currentExpense.sum
+})
 </script>
 <style scoped lang="scss">
 .main {
