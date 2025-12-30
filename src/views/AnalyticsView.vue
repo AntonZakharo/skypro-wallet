@@ -43,5 +43,6 @@ if (!token || token === null) {
   display: grid;
   grid-template-columns: 4fr 8fr;
   gap: 32px;
+  margin-bottom: 40px;
 }
 </style>

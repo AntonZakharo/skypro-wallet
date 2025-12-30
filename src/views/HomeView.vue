@@ -51,5 +51,31 @@ provide('editObj', editObj)
 .expenses {
   display: grid;
   grid-template-columns: 8fr 4fr;
+  margin-bottom: 40px;
 }
+@media (max-width: 1300px) {
+  .center {
+    padding-left: calc(50% - 500px);
+    padding-right: calc(50% - 500px);
+  }
+  .title {
+    font-size: 28px;
+  }
+}
+@media (max-width: 1050px) {
+  .center {
+    padding-left: calc(50% - 400px);
+    padding-right: calc(50% - 400px);
+  }
+  .title {
+    font-size: 24px;
+  }
+}
+@media (max-width: 850px) {
+ .center {
+    padding-left: calc(50% - 350px);
+    padding-right: calc(50% - 350px);
+  }
+}
+
 </style>
