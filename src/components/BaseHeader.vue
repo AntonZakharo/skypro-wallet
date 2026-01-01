@@ -1,7 +1,18 @@
 <template>
-  <header class="header centre">
+  <header
+    class="header centre"
+    :class="{
+      'auth-header': isAuth,
+    }"
+  >
     <RouterLink to="/" class="header__logo">
-      <img class="header__logo_img" src="../assets/icons/Vector.svg" alt="" />
+      <img
+        class="header__logo_img main-logo"
+        v-if="currentPage === 'home'"
+        src="../assets/icons/Vector.svg"
+        alt=""
+      />
+      <img class="header__logo_img auth-logo" v-else src="../assets/icons/Vector.svg" alt="" />
     </RouterLink>
     <nav v-if="!isAuth" class="header__nav">
       <RouterLink
@@ -80,7 +91,9 @@ function logout() {
   &__nav {
     display: flex;
     gap: 48px;
-
+    &-pop-up {
+      display: none;
+    }
     &-text {
       font-weight: 400;
       font-size: 14px;
@@ -163,16 +176,21 @@ function logout() {
 @media (max-width: 670px) {
   .header {
     justify-content: start;
+
     &__logo {
       margin-right: 71px;
-      &_img {
+      .main-logo {
         width: 109px;
         height: 14px;
+      }
+      .auth-logo {
+        margin-left: 16px;
       }
     }
     &__nav {
       margin-right: 20px;
       gap: 8px;
+      position: relative;
       cursor: pointer;
       &::after {
         content: url(../assets/icons/arrow-down.svg);
@@ -191,10 +209,9 @@ function logout() {
         border-radius: 6px;
         gap: 6px;
         position: absolute;
-        right: 78px;
-        top: 47px;
+        top: 30px;
+        left: -40px;
         background-color: #fff;
-        display: none;
         &-text {
           font-size: 10px;
           padding: 7px 14px;
@@ -206,6 +223,9 @@ function logout() {
     &__logout {
       font-size: 12px;
     }
+  }
+  .auth-header {
+    background-color: rgba(244, 245, 246, 1);
   }
 }
 </style>

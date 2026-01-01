@@ -122,6 +122,7 @@ async function reg() {
   background-color: #fff;
   border-radius: 30px;
   padding: 32px;
+  box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
   &__title {
     font-family: Montserrat;
     font-weight: 700;
@@ -174,6 +175,8 @@ async function reg() {
     margin-top: 24px;
     margin-bottom: 24px;
     cursor: pointer;
+    outline: none;
+    border: none;
   }
   &__text {
     font-weight: 400;
@@ -199,5 +202,13 @@ input:-webkit-autofill:active {
   box-shadow: inset 20px 20px 0px 20px #f1ebfd;
   border-color: #7334ea;
   transition: background-color 0.5s ease-in-out 0s;
+}
+
+@media (max-width: 670px) {
+  .form {
+    &__title {
+      font-size: 24px;
+    }
+  }
 }
 </style>

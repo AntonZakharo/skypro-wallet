@@ -12,7 +12,13 @@ import BaseHeader from '@/components/BaseHeader.vue'
 <style scoped>
 .main {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: flex-start;
+  height: calc(100vh - 64px);
+}
+@media (max-width: 670px) {
+  .main {
+    background-color: #fff;
+  }
 }
 </style>
