@@ -1,6 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import AuthForm from '@/components/AuthForm.vue'
 import BaseHeader from '@/components/BaseHeader.vue'
+import { inject } from 'vue'
+const currentPage = inject('currentPage')
+currentPage.value = 'auth'
 </script>
 
 <template>

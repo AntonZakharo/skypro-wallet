@@ -172,8 +172,7 @@ async function reg() {
     text-align: center;
     vertical-align: middle;
     padding: 12px;
-    margin-top: 24px;
-    margin-bottom: 24px;
+    margin: 24px 0;
     cursor: pointer;
     outline: none;
     border: none;
@@ -206,6 +205,7 @@ input:-webkit-autofill:active {
 
 @media (max-width: 670px) {
   .form {
+    box-shadow: none;
     &__title {
       font-size: 24px;
     }

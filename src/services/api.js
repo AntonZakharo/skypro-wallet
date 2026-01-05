@@ -4,7 +4,7 @@ const API_URL = 'https://wedev-api.sky.pro/api/transactions/'
 async function fetchExpenses({ token }) {
   try {
     // Здесь начинается попытка сделать запрос
-    const data = await axios.get(API_URL, {
+    const data = await axios.get(API_URL + '?sortBy=date', {
       headers: {
         Authorization: token,
       },

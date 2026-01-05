@@ -8,4 +8,9 @@ const currentPage = ref('')
 provide('currentPage', currentPage)
 const expenses = ref([])
 provide('expenses', expenses)
+const editObj = ref({
+  isEditing: false,
+  currentExpense: {},
+})
+provide('editObj', editObj)
 </script>

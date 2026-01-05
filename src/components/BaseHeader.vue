@@ -1,26 +1,23 @@
 <template>
-  <header
-    class="header centre"
-    :class="{
-      'auth-header': isAuth,
-    }"
-  >
+  <header class="header centre">
     <RouterLink to="/" class="header__logo">
-      <img
-        class="header__logo_img main-logo"
-        v-if="currentPage === 'home'"
-        src="../assets/icons/Vector.svg"
-        alt=""
-      />
-      <img class="header__logo_img auth-logo" v-else src="../assets/icons/Vector.svg" alt="" />
+      <picture class="header__logo_img main-logo" v-if="currentPage === 'home'">
+        <source media="(max-width: 670px)" srcset="../assets/icons/skypro-logo-mobile.svg" />
+        <img src="../assets/icons/skypro-logo.svg" alt="" />
+      </picture>
+      <picture class="header__logo_img auth-logo" v-else>
+        <source media="(max-width: 670px)" srcset="../assets/icons/skypro-logo-mobile.svg" />
+        <img src="../assets/icons/skypro-logo.svg" alt="" />
+      </picture>
     </RouterLink>
-    <nav v-if="!isAuth" class="header__nav">
+    <nav v-if="!isAuth" class="header__nav" @click="changePopUp">
       <RouterLink
         to="/"
         class="header__nav-text"
         title="Мои расходы"
         :class="{
           _active: currentPage === 'home',
+          '_mobile-show': currentPage === 'home',
         }"
         >Мои расходы</RouterLink
       >
@@ -30,10 +27,21 @@
         title="Анализ расходов"
         :class="{
           _active: currentPage === 'analytics',
+          '_mobile-show': currentPage === 'analytics',
         }"
         >Анализ расходов</RouterLink
       >
-      <div class="header__nav-pop-up">
+      <RouterLink
+        to="/new-expense"
+        class="header__nav-text header__nav-text_new-expense"
+        title="Новый расход"
+        :class="{
+          _active: currentPage === 'new-expense',
+          '_mobile-show': currentPage === 'new-expense',
+        }"
+        >Новый расход</RouterLink
+      >
+      <div class="header__nav-pop-up" v-if="isShowPopUp">
         <RouterLink
           to="/"
           class="header__nav-pop-up-text"
@@ -44,11 +52,11 @@
           >Мои расходы</RouterLink
         >
         <RouterLink
-          to="/"
+          to="/new-expense"
           class="header__nav-pop-up-text"
           title="Мои расходы"
           :class="{
-            '_active_pop-up': currentPage === 'home',
+            '_active_pop-up': currentPage === 'new-expense',
           }"
           >Новый расход</RouterLink
         >
@@ -68,7 +76,7 @@
   </header>
 </template>
 <script setup>
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 defineProps({
@@ -79,6 +87,10 @@ const router = useRouter()
 function logout() {
   localStorage.removeItem('token')
   router.push('/auth')
+}
+const isShowPopUp = ref(false)
+function changePopUp() {
+  isShowPopUp.value = !isShowPopUp.value
 }
 </script>
 <style scoped lang="scss">
@@ -102,6 +114,9 @@ function logout() {
       text-align: center;
       transition: 0.3s;
       position: relative;
+      &_new-expense {
+        display: none;
+      }
       &::before {
         display: block;
         content: attr(title);
@@ -176,30 +191,29 @@ function logout() {
 @media (max-width: 670px) {
   .header {
     justify-content: start;
+    background-color: rgba(244, 245, 246, 1);
 
     &__logo {
       margin-right: 71px;
+      margin-left: 16px;
       .main-logo {
         width: 109px;
         height: 14px;
-      }
-      .auth-logo {
-        margin-left: 16px;
       }
     }
     &__nav {
       margin-right: 20px;
       gap: 8px;
-      position: relative;
+      position: absolute;
+      right: 55px;
       cursor: pointer;
       &::after {
         content: url(../assets/icons/arrow-down.svg);
       }
       &-text {
         font-size: 12px;
-        &:last-of-type {
-          display: none;
-        }
+        display: none;
+        width: fit-content;
       }
       &-pop-up {
         padding: 10px;
@@ -211,6 +225,7 @@ function logout() {
         position: absolute;
         top: 30px;
         left: -40px;
+        z-index: 4;
         background-color: #fff;
         &-text {
           font-size: 10px;
@@ -222,10 +237,12 @@ function logout() {
 
     &__logout {
       font-size: 12px;
+      position: absolute;
+      right: 15px;
     }
-  }
-  .auth-header {
-    background-color: rgba(244, 245, 246, 1);
+    ._mobile-show {
+      display: block;
+    }
   }
 }
 </style>
