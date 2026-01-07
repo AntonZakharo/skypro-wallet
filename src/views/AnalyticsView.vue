@@ -2,7 +2,9 @@
   <BaseHeader />
   <h1 class="title center">Анализ расходов</h1>
   <div class="main center">
-    <BaseCalendar />
+    <div class="calendar">
+      <BaseCalendar />
+    </div>
     <BaseExpensesTable />
   </div>
 </template>
@@ -10,14 +12,11 @@
 import BaseCalendar from '@/components/BaseCalendar.vue'
 import BaseExpensesTable from '@/components/BaseExpensesTable.vue'
 import BaseHeader from '@/components/BaseHeader.vue'
-import { inject, provide, ref } from 'vue'
+import { inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 const token = localStorage.getItem('token')
 const router = useRouter()
-
-const date = ref([])
-provide('date', date)
 
 const currentPage = inject('currentPage')
 currentPage.value = 'analytics'
@@ -44,5 +43,16 @@ if (!token || token === null) {
   grid-template-columns: 4fr 8fr;
   gap: 32px;
   margin-bottom: 40px;
+}
+@media (max-width: 670px) {
+  .calendar {
+    display: none;
+  }
+  .title {
+    margin-left: 16px;
+  }
+  .main {
+    grid-template-columns: none;
+  }
 }
 </style>

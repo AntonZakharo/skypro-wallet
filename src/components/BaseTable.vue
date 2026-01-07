@@ -105,7 +105,6 @@ function formatDate(date) {
 }
 function remove(expense) {
   try {
-    console.log(expense)
     deleteExpense(expense._id).then((exps) => {
       expenses.value = exps
     })
@@ -123,7 +122,6 @@ function turnEditModeMobile(expense) {
   editObj.value.isEditing = true
   editObj.value.currentExpense = expense
   router.push('/new-expense')
-  console.log(editObj.value)
 }
 </script>
 

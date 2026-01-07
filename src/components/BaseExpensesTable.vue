@@ -12,11 +12,17 @@
     </p>
     <BaseDiagram :expenses="filteredExps"></BaseDiagram>
   </div>
+  <BaseButton class="choose-date-btn" @click="router.push('/calendar')"
+    >Выбрать другой период</BaseButton
+  >
 </template>
 <script setup>
 import { computed, inject, provide, ref, watch } from 'vue'
 import BaseDiagram from './BaseDiagram.vue'
 import { getExpenses } from '@/services/api'
+import BaseButton from './BaseButton.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const monthNames = [
   'января',
@@ -47,7 +53,7 @@ const expenses = ref([])
 const filteredExps = ref([])
 getExpenses(expenses)
 watch(
-  () => currentDates.value,
+  [() => currentDates.value, () => expenses.value],
   async () => {
     filteredExps.value = []
     currentDates.value.forEach((selectedDate) => {
@@ -84,7 +90,7 @@ watch(
     font-size: 12px;
     line-height: 100%;
     color: #999999;
-    margin-bottom: 21px;
+    margin-bottom: 24px;
     &_bold {
       font-weight: 600;
     }
@@ -140,5 +146,23 @@ watch(
 ._pink {
   background-color: #ffb9b8;
   height: 212px;
+}
+.choose-date-btn {
+  display: none;
+}
+@media (max-width: 670px) {
+  .expenses-table {
+    display: flex;
+    height: 50vh;
+    padding: 0;
+    justify-content: center;
+    padding: 0 16px;
+    &__title {
+      font-size: 20px;
+    }
+  }
+  .choose-date-btn {
+    display: block;
+  }
 }
 </style>

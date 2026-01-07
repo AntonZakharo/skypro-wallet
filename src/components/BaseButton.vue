@@ -5,8 +5,9 @@
       :class="{
         button__btn_short: currentPage === 'home',
       }"
+      @click="onClick"
     >
-      <slot></slot>
+      <slot />
     </button>
   </div>
 </template>
@@ -14,6 +15,11 @@
 import { inject } from 'vue'
 
 const currentPage = inject('currentPage')
+const emit = defineEmits(['click'])
+
+const onClick = (e) => {
+  emit('click', e)
+}
 </script>
 <style scoped lang="scss">
 .button {

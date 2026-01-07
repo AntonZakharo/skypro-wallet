@@ -193,6 +193,8 @@ async function reg() {
   font-size: 14px;
   color: rgba(248, 77, 77, 1);
   text-align: center;
+  word-break: break-word;
+  width: 313px;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

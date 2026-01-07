@@ -5,7 +5,7 @@
       outline: editObj.isEditing ? '1px solid black' : 'none',
     }"
   >
-    <RouterLink to="/" class="back-btn">
+    <RouterLink to="/" @click="turnEditModeOff" class="back-btn">
       <img src="../assets/icons/back.svg" alt="back" />
       <p class="back-btn__text">Мои расходы</p>
     </RouterLink>
@@ -29,6 +29,9 @@
         name="description"
         v-model="description"
         placeholder="Введите описание"
+        :class="{
+          _error: isError,
+        }"
       />
       <p class="form__text">Категория</p>
       <div class="form__categories">
@@ -94,7 +97,15 @@
         </div>
       </div>
       <p class="form__text">Дата</p>
-      <input class="form__input" type="date" v-model="date" placeholder="Введите дату" />
+      <input
+        class="form__input"
+        type="date"
+        v-model="date"
+        placeholder="Введите дату"
+        :class="{
+          _error: isError,
+        }"
+      />
       <p class="form__text">Сумма</p>
       <input
         class="form__input"
@@ -104,6 +115,9 @@
         @input="onlyDigits"
         :style="{
           marginBottom: isError ? '12px' : '24px',
+        }"
+        :class="{
+          _error: isError,
         }"
       />
       <p class="form__error" v-if="isError">{{ error }}</p>
@@ -200,13 +214,11 @@ function turnEditModeOff() {
 watch(
   editObj.value,
   (newEditObj) => {
-    console.log(newEditObj)
     if (Object.keys(newEditObj.currentExpense).length == 0) return
     description.value = newEditObj.currentExpense.description
     category.value = newEditObj.currentExpense.category
     date.value = new Date(newEditObj.currentExpense.date).toISOString().slice(0, 10)
     sum.value = newEditObj.currentExpense.sum
-    console.log(description.value)
   },
   { immediate: true, deep: true },
 )
@@ -312,6 +324,11 @@ watch(
 .active {
   background-color: #dfdfdf;
 }
+._error {
+  background: #ffebeb;
+  border: 0.5px solid #f25050;
+  transition: 0.3s;
+}
 input[type='number'] {
   -moz-appearance: textfield;
 
@@ -336,7 +353,6 @@ input[type='number'] {
     display: flex;
     gap: 6px;
     margin-bottom: 12px;
-    cursor: pointer;
     &__text {
       font-weight: 600;
       font-size: 12px;

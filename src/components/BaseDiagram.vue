@@ -58,7 +58,8 @@ const chartData = computed(() => {
 </script>
 <style scoped>
 .chart {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   gap: 30px;
   align-items: flex-end;
   justify-content: center;
@@ -78,7 +79,7 @@ const chartData = computed(() => {
 
 .bar-line {
   width: 70px;
-  border-radius: 20px;
+  border-radius: 12px;
   transition: 0.3s;
 }
 
@@ -86,5 +87,25 @@ const chartData = computed(() => {
   margin-top: 10px;
   font-size: 14px;
   text-align: center;
+}
+@media (max-width: 670px) {
+  .label {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 52px;
+  }
+  .chart {
+    gap: 6px;
+    justify-content: center;
+  }
+  .value {
+    font-size: 10px;
+  }
+  .bar-line {
+    width: 52px;
+    border-radius: 6px;
+  }
 }
 </style>

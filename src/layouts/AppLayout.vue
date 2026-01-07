@@ -13,4 +13,6 @@ const editObj = ref({
   currentExpense: {},
 })
 provide('editObj', editObj)
+const date = ref([])
+provide('date', date)
 </script>
