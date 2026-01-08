@@ -130,6 +130,7 @@ function turnEditModeMobile(expense) {
   background-color: white;
   border-radius: 30px;
   margin-right: 34px;
+  height: 551px;
 }
 .title {
   font-weight: 700;
@@ -165,6 +166,7 @@ function turnEditModeMobile(expense) {
   &__block {
     overflow-y: auto;
     padding: 18px 32px;
+    height: 390px;
     &::-webkit-scrollbar {
       width: 6px;
     }
