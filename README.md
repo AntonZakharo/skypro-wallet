@@ -15,9 +15,10 @@
     
 
 ### 2.  **Установить зависимости:**
-        powershell
-        npm install
+    powershell
+    npm install
+    
 ### 3. **Запуск**
-        powershell
-        npm run preview
+    powershell
+    npm run preview
         
