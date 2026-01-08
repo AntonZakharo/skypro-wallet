@@ -134,9 +134,13 @@
   <BaseButton
     @click="edit({ description, category, date, sum }, editObj.currentExpense._id)"
     v-if="currentPage !== 'home' && editObj.isEditing"
+    class="form__button-mobile"
     >Изменить расход</BaseButton
   >
-  <BaseButton @click="createExpense" v-if="currentPage !== 'home' && !editObj.isEditing"
+  <BaseButton
+    @click="createExpense"
+    v-if="currentPage !== 'home' && !editObj.isEditing"
+    class="form__button-mobile"
     >Добавить новый расход</BaseButton
   >
 </template>
@@ -179,6 +183,7 @@ function createExpense() {
     category.value = ''
     date.value = ''
     sum.value = ''
+    isError.value = false
   } else {
     isError.value = true
     error.value = 'Не все поля заполнены'
@@ -360,6 +365,11 @@ input[type='number'] {
       letter-spacing: 0px;
       color: #999999;
     }
+  }
+}
+@media (max-height: 700px) {
+  .form__button-mobile {
+    position: static;
   }
 }
 </style>

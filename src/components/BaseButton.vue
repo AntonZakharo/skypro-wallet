@@ -32,6 +32,7 @@ const onClick = (e) => {
     box-sizing: border-box;
     display: flex;
     gap: 10px;
+    background-color: white;
   }
   &__btn {
     width: 100%;
