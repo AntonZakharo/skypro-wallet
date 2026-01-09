@@ -1,6 +1,14 @@
 <template>
   <div class="calendar">
     <h2 class="calendar__text">Период</h2>
+    <div class="mobile-block">
+      <RouterLink to="/analytics" class="mobile-block__link">
+        <img src="../assets/icons/back.svg" class="mobile-block__img" alt="back" />
+        <p class="mobile-block__text">Анализ расходов</p>
+      </RouterLink>
+      <h2 class="mobile-block__heading">Выбор периода</h2>
+    </div>
+
     <div class="calendar__titles">
       <p class="calendar__title">пн</p>
       <p class="calendar__title">вт</p>
@@ -35,9 +43,15 @@
       </div>
     </div>
   </div>
+  <BaseButton @click="router.push('/analytics')" class="calendar__button"
+    >Выбрать период</BaseButton
+  >
 </template>
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
+import BaseButton from './BaseButton.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const today = new Date()
 const currentMonth = ref(today.getMonth())
@@ -164,6 +178,7 @@ onMounted(() => {
   background-color: white;
   border-radius: 30px;
   width: 379px;
+
   &__text {
     font-weight: 700;
     font-size: 24px;
@@ -229,6 +244,9 @@ onMounted(() => {
     overflow-y: auto;
     height: 427px;
   }
+  &__button {
+    display: none;
+  }
 }
 ._chosen {
   background-color: rgba(241, 235, 253, 1);
@@ -237,5 +255,70 @@ onMounted(() => {
 ._other-month {
   opacity: 0;
   pointer-events: none;
+}
+.mobile-block {
+  display: none;
+}
+@media (max-width: 670px) {
+  .calendar {
+    width: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* важно */
+    &__list {
+      height: 100%;
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 12px;
+    }
+    &__text {
+      display: none;
+      &_mobile {
+        display: block;
+        margin-bottom: 22px;
+        margin-left: 16px;
+      }
+    }
+    &__titles {
+      margin: 0 16px;
+      gap: 0;
+    }
+    &__dates {
+      margin-right: 16px;
+      margin-left: 16px;
+      gap: 0;
+      row-gap: 6px;
+    }
+    &__month {
+      margin-left: 16px;
+    }
+    &__button {
+      flex-shrink: 0;
+      display: block;
+      position: static;
+    }
+  }
+  .mobile-block {
+    display: block;
+    margin: 24px 16px;
+    &__text {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 150%;
+      letter-spacing: 0px;
+      color: #999999;
+    }
+    &__link {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    &__heading {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 100%;
+    }
+  }
 }
 </style>

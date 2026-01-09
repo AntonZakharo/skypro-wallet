@@ -1,11 +1,44 @@
 <template>
-  <div class="form">
+  <div
+    :style="{
+      marginTop: (isReg ? 143 : 169) + 'px',
+    }"
+    class="form"
+  >
     <div v-if="!isReg" class="form__title">Вход</div>
     <div v-if="isReg" class="form__title">Регистрация</div>
     <div class="form__inputs">
-      <input type="text" class="form__input" placeholder="Логин" v-model="login" />
-      <input v-if="isReg" type="text" class="form__input" placeholder="Эл. почта" v-model="email" />
-      <input type="password" class="form__input" placeholder="Пароль" v-model="password" />
+      <input
+        type="text"
+        :class="{
+          form__input_error: isError,
+        }"
+        @input="isError = false"
+        class="form__input"
+        placeholder="Логин"
+        v-model="login"
+      />
+
+      <input
+        v-if="isReg"
+        :class="{
+          form__input_error: isError,
+        }"
+        type="text"
+        class="form__input"
+        placeholder="Эл. почта"
+        v-model="email"
+      />
+
+      <input
+        type="password"
+        class="form__input"
+        :class="{
+          form__input_error: isError,
+        }"
+        placeholder="Пароль"
+        v-model="password"
+      />
     </div>
     <div v-if="isError" class="error">{{ error }}</div>
     <button v-if="!isReg" class="form__button" @click="log">Войти</button>
@@ -23,7 +56,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { signIn, signUp } from '@/serivces/auth'
+import { signIn, signUp } from '@/services/auth'
 
 const isReg = ref(false)
 const router = useRouter()
@@ -39,6 +72,11 @@ function changeMode() {
   login.value = ''
   password.value = ''
   email.value = ''
+  isError.value = false
+}
+function handleError(err) {
+  error.value = String(err).slice(6)
+  isError.value = true
 }
 async function log() {
   try {
@@ -55,8 +93,7 @@ async function log() {
       isError.value = true
     }
   } catch (err) {
-    error.value = String(err).slice(6)
-    isError.value = true
+    handleError(err)
   }
 }
 async function reg() {
@@ -76,8 +113,7 @@ async function reg() {
       isError.value = true
     }
   } catch (err) {
-    error.value = String(err).slice(6)
-    isError.value = true
+    handleError(err)
   }
 }
 </script>
@@ -86,9 +122,7 @@ async function reg() {
   background-color: #fff;
   border-radius: 30px;
   padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
   &__title {
     font-family: Montserrat;
     font-weight: 700;
@@ -96,7 +130,7 @@ async function reg() {
     line-height: 100%;
     text-align: center;
     vertical-align: middle;
-    display: inline;
+    margin-bottom: 24px;
   }
   &__input {
     border: 0.5px solid #999999;
@@ -112,11 +146,18 @@ async function reg() {
     &:focus {
       outline: 0;
     }
+    &_error {
+      background-color: rgba(255, 235, 235, 1);
+      box-shadow: inset 20px 20px 0px 20px rgba(255, 235, 235, 1) !important;
+      border-color: rgba(248, 77, 77, 1) !important;
+      transition: background-color 0.5s;
+    }
   }
   &__inputs {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 12px;
   }
   &__button {
     width: 100%;
@@ -131,7 +172,10 @@ async function reg() {
     text-align: center;
     vertical-align: middle;
     padding: 12px;
+    margin: 24px 0;
     cursor: pointer;
+    outline: none;
+    border: none;
   }
   &__text {
     font-weight: 400;
@@ -147,7 +191,26 @@ async function reg() {
 }
 .error {
   font-size: 14px;
-  color: #cc0000;
+  color: rgba(248, 77, 77, 1);
   text-align: center;
+  word-break: break-word;
+  width: 313px;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: inset 20px 20px 0px 20px #f1ebfd;
+  border-color: #7334ea;
+  transition: background-color 0.5s ease-in-out 0s;
+}
+
+@media (max-width: 670px) {
+  .form {
+    box-shadow: none;
+    &__title {
+      font-size: 24px;
+    }
+  }
 }
 </style>
